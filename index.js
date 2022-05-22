@@ -40,17 +40,18 @@ bot.on("messageCreate", async message => {
     let commandfile = bot.commands.get(cmd.slice(prefix.length)) || bot.commands.get(bot.aliases.get(cmd.slice(prefix.length)))
     if (commandfile) {
         message.delete()
-        if (commandfile.config.permission == "BOT" && message.author.bot == false) {
-            message.reply({content: "This command can only be executed by a bot"})
-            return;
-        }
         if (commandfile.config.permission == "DEVELOPER" && await checkdevs.check(message.author.id) == false) {
-            message.reply({content: "Only bot developers can access this command"})
+            message.channel.send({content: "Only bot developers can access this command"})
             return;
         } else {
-            if (commandfile.config.permission == "ADMINISTRATOR" && !message.member.roles.cache.find(r => r.id == commandfile.config.requiredrole) && (!message.member.roles.highest().rawPosition > message.guild.roles.cache.get(commandfile.config.requiredrole).rawPosition) && commandfile.config.higherRoleAllowed) {
-                message.reply({content: "You do not have the required role to execute this command"})
-                return
+            if (commandfile.config.permission == "ADMINISTRATOR") {
+                if(!message.member.roles.cache.find(r => r.id == commandfile.config.requiredrole)){
+                    if(!message.member.roles.highest.position > message.guild.roles.cache.get(commandfile.config.requiredrole).rawPosition || !commandfile.config.higherRoleAllowed){
+                        message.channel.send({content: "You do not have the required role to execute this command"})
+                        return
+                    }
+                }
+                commandfile.run(bot, message, args)
             } else {
                 // if (commandfile.config.permission != "BOT" && message.author.bot == true) {
                 //     message.reply("Bots cannot execute this command")

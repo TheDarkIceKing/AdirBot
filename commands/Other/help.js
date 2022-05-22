@@ -56,7 +56,7 @@ module.exports.run = async (bot, message, args) => {
             .setThumbnail(message.author.displayAvatarURL())
             .addFields(
                 { name: `Player Commands - (${await getCommandsAmount("PLAYER")})`, value: `${await loadCommands("PLAYER")}` },
-                // { name: `Staff Commands - (${await getCommandsAmount("ADMINISTRATOR")})`, value: `${await loadCommands("ADMINISTRATOR")}` },
+                { name: `Staff Commands - (${await getCommandsAmount("ADMINISTRATOR")})`, value: `${await loadCommands("ADMINISTRATOR")}` },
                 { name: `Developer Commands - (${await getCommandsAmount("DEVELOPER")})`, value: `${await loadCommands("DEVELOPER")}` }
                 // { name: `Bot Commands - (${await getCommandsAmount("BOT")})`, value: `${await loadCommands("BOT")}` }
             )
