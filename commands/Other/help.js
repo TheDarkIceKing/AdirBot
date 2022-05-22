@@ -49,8 +49,6 @@ module.exports.run = async (bot, message, args) => {
 
     async function sendGlobalHelp(message) {
 
-        message.channel.send("test")
-
         var globalHelpEmbed = new Discord.MessageEmbed()
             .setAuthor(`Help`)
             .setColor("F4A0CC")

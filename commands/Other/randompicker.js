@@ -1,13 +1,13 @@
 const Discord = require("discord.js")
 const botconfig = require("../../config.json");
 const fs = require("fs");
+const { isNumber } = require("util");
 
 module.exports.run = async (bot, message, args) => {
     if (!args[0]){
         return message.channel.send({content: "Please choose the mode. Voice will select anyone in the voicechat, text will choose anyone that enters in the raffle"})
     }
     if(args[0].toLowerCase() == "voice"){
-        // console.log(message, message.member.voice.channelId)
         if(message.member.voice.channelId){
             voicePicker(message, message.member.voice.channelId)
         } else {
@@ -19,9 +19,7 @@ module.exports.run = async (bot, message, args) => {
     async function voicePicker(message, id){
         incallPlayers = [];
         message.guild.channels.cache.get(id).members.forEach((member) =>{
-
             playername = member.nickname || member.user.username
-            
             incallPlayers.push(playername)
         })
         const random = Math.floor(Math.random() * incallPlayers.length);
@@ -89,14 +87,21 @@ module.exports.run = async (bot, message, args) => {
     function isLetter(str) {
         return str.length === 1 && str.match(/[a-z]/i);
     }
+    function isNumber(str){
+        return str.length === 1 && str.match(/[0-9]/i);
+    }
     function transformletter(playername){
         newname = ""
+        numberToLetter = [":zero:", ":one:", ":two:", ":three:", ":four:", ":five:", ":six:", ":seven:", ":eight:", ":nine:"]
         playername.split("").forEach((letter) =>{
             if(isLetter(letter)){
                 characteremoji = ":regional_indicator_" + letter.toLowerCase() + ":"
+            } else if (isNumber(letter)) {
+                emojislot = parseInt(letter)
+                characteremoji = numberToLetter[emojislot]
             } else if (letter == " "){
                 characteremoji = "      "
-            } else{
+            }  else {
                 characteremoji = `${letter}`
             }
             newname += characteremoji;
@@ -105,7 +110,6 @@ module.exports.run = async (bot, message, args) => {
     }
    
 }
-
 
 
 module.exports.config = {
