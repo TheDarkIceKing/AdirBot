@@ -26,6 +26,7 @@ module.exports.run = async (bot, message, args) => {
    } catch {
     return message.channel.send({content: "Account not found"})
    }
+   try{
    
    rankRR = RankData.elo
    progressionRR = RankData.elo > 1800 ? `${rankRR - 1800} RR` : `${rankRR % 100} / 100 RR`
@@ -40,7 +41,7 @@ module.exports.run = async (bot, message, args) => {
        {name: "Rank", value: RankData.currenttierpatched || "Unranked", inline: true},
        {name: "Progression", value: `${progressionRR.toString()}`, inline: true}
    )
-   message.channel.send(await {embeds: [responseEmbed]})
+   message.channel.send(await {embeds: [responseEmbed]})} catch{message.channel.send({content: "Internal error. Please try again"})}
 }
 
 module.exports.config = {
