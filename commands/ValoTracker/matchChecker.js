@@ -60,7 +60,7 @@ module.exports.run = async (bot, message, args) => {
         await loadKDA(MatchData)
 
         sentMessage.edit({ content: " ", embeds: [await responseEmbed] })
-        
+
 
     })
 
@@ -130,11 +130,21 @@ module.exports.run = async (bot, message, args) => {
         )
         return
     }
-    async function keepalive(sentMessage){
-        showNotFrozen = setInterval(function(){
-            if(!sentMessage.content.includes("data")){clearInterval(showNotFrozen); sentMessage.edit({content: " "})}
-            if(sentMessage.content == "Getting data...") return sentMessage.edit({content: "Getting data.."})
-            return sentMessage.edit({content: "Getting data..."})
+    async function keepalive(sentMessage) {
+        showNotFrozen = setInterval(function () {
+
+            if (sentMessage.content == "Getting data...") {
+                return sentMessage.edit({ content: "Getting data.." })
+            } else {
+                if (!sentMessage.content.includes("data")) {
+                    clearInterval(showNotFrozen);
+                    sentMessage.edit({ content: " " })
+                }
+                else {
+                    if (!sentMessage.content.includes("data")) { clearInterval(showNotFrozen); sentMessage.edit({ content: " " }) }
+                }
+            }
+
         }, 800)
     }
 }
