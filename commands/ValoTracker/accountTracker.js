@@ -1,5 +1,6 @@
 const Discord = require("discord.js")
 const fetch = require('node-fetch');
+const botsettings = require('../../config.json');
 
 
 module.exports.run = async (bot, message, args) => {
@@ -38,7 +39,7 @@ module.exports.run = async (bot, message, args) => {
    .addFields(
        {name: "Region", value: AccountData.region},
        {name: "Level", value: AccountData.account_level.toString()},
-       {name: "Rank", value: RankData.currenttierpatched || "Unranked", inline: true},
+       {name: "Rank", value:  botsettings.rankicons[RankData.currenttierpatched] || botsettings.rankicons.Unranked, inline: true},
        {name: "Progression", value: `${progressionRR.toString()}`, inline: true}
    )
    message.channel.send(await {embeds: [responseEmbed]})} catch{message.channel.send({content: "Internal error. Please try again"})}

@@ -1,7 +1,6 @@
 const Discord = require("discord.js")
 const fetch = require('node-fetch');
 const botsettings = require('../../config.json');
-const { check } = require("../../functions/check_developer");
 
 
 module.exports.run = async (bot, message, args) => {
@@ -30,7 +29,6 @@ module.exports.run = async (bot, message, args) => {
             .setTitle(`Match summary`)
             .setThumbnail(botsettings.mapicons[MatchData.metadata["map"]])
             .addFields(
-
 
                 { name: "MatchID", value: matchId },
                 { name: "Server", value: `${MatchData.metadata["cluster"]}`, inline: false },
@@ -152,7 +150,7 @@ module.exports.run = async (bot, message, args) => {
 
 module.exports.config = {
     name: "valomatch",
-    description: "checks a users valoant account",
+    description: "checks a users valorant match",
     aliases: ["matchchecker"],
     usage: "valoaccount (name+tag)",
     permission: "PLAYER"
