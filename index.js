@@ -11,7 +11,6 @@ const fs = require("fs");
 bot.commands = new Discord.Collection();
 bot.aliases = new Discord.Collection();
 
-
 bot.login(process.env.token);
 
 bot.once('ready', async () => {
