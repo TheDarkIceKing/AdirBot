@@ -23,6 +23,10 @@ module.exports.run = async (bot, message, args) => {
             return message.channel.send({ content: "Match not found" })
         }
 
+        showNotFrozen = setInterval(function(){
+            if(sentMessage.content == "Getting data...") return sentMessage.edit({content: "Getting data.."})
+            return sentMessage.edit({content: "Getting data..."})
+        })
 
 
         responseEmbed = new Discord.MessageEmbed()
@@ -59,6 +63,7 @@ module.exports.run = async (bot, message, args) => {
         await loadKDA(MatchData)
 
         sentMessage.edit({ content: " ", embeds: [await responseEmbed] })
+        clearInterval(showNotFrozen)
 
     })
 
