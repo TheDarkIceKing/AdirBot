@@ -23,10 +23,7 @@ module.exports.run = async (bot, message, args) => {
             return message.channel.send({ content: "Match not found" })
         }
 
-        showNotFrozen = setInterval(function(){
-            if(sentMessage.content == "Getting data...") return sentMessage.edit({content: "Getting data.."})
-            return sentMessage.edit({content: "Getting data..."})
-        })
+        keepalive(sentMessage)
 
 
         responseEmbed = new Discord.MessageEmbed()
@@ -63,7 +60,7 @@ module.exports.run = async (bot, message, args) => {
         await loadKDA(MatchData)
 
         sentMessage.edit({ content: " ", embeds: [await responseEmbed] })
-        clearInterval(showNotFrozen)
+        
 
     })
 
@@ -132,6 +129,13 @@ module.exports.run = async (bot, message, args) => {
             { name: "Score", value: `${gameScore[0]}-${gameScore[1]}`, inline: true }
         )
         return
+    }
+    async function keepalive(sentMessage){
+        showNotFrozen = setInterval(function(){
+            if(!sentMessage.content.includes("data")){clearInterval(showNotFrozen); sentMessage.edit({content: " "})}
+            if(sentMessage.content == "Getting data...") return sentMessage.edit({content: "Getting data.."})
+            return sentMessage.edit({content: "Getting data..."})
+        }, 800)
     }
 }
 
