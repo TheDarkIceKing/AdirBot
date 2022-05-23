@@ -138,11 +138,12 @@ module.exports.run = async (bot, message, args) => {
             } else {
                 if (!sentMessage.content.includes("data")) {
                     clearInterval(showNotFrozen);
-                    sentMessage.edit({ content: " " })
+                    return sentMessage.edit({ content: " " })
                 }
                 else {
-                    if (!sentMessage.content.includes("data")) { clearInterval(showNotFrozen); sentMessage.edit({ content: " " }) }
+                   return sentMessage.edit({ content: "Getting data..."})
                 }
+                
             }
 
         }, 800)
