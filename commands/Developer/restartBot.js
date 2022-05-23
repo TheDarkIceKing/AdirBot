@@ -11,7 +11,7 @@ module.exports.run = async (bot, message, args) => {
 module.exports.config = {
     name: "restart",
     description: "restarts the bot",
-    aliases: ["!kill"],
+    aliases: ["kill"],
     usage: "restar",
     permission: "DEVELOPER"
 }
