@@ -44,12 +44,10 @@ module.exports.run = async (bot, message, args) => {
 }
 
 module.exports.config = {
-    name: "valoaccount",
+    name: "valorank",
     description: "checks a users valoant account",
-    aliases: ["valorank"],
-    usage: "valoaccount (name+tag)",
-    permission: "ADMINISTRATOR",
-    requiredrole: "978022910012829816",
-    higherRoleAllowed: false
+    aliases: ["valoaccount"],
+    usage: "valorank (name+tag)",
+    permission: "PLAYER"
 
 }
