@@ -69,7 +69,7 @@ module.exports.run = async (bot, message, args) => {
                 rankResult = await fetch(rankAPIURL)
                 rankJSON = await rankResult.json()
                 RankData = await rankJSON.data
-                return botsettings.rankicons[await RankData.currenttierpatched]
+                return botsettings.rankicons[await RankData.currenttierpatched] || "Unranked"
             } else {
                 return botsettings.rankicons[MatchDataResolved.players[team][player].currenttier_patched]
             }
