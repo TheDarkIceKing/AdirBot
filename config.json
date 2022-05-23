@@ -33,5 +33,91 @@
         "Immortal 2": "<:immortal_2:978112181516263454>",
         "Immortal 3": "<:immortal_3:978112180908085248>",
         "Radiant": "<:radiant:978108864446738472>"
+    }, 
+    "agents": {
+        "Brimstome": {
+            "role": "Controller",
+            "icon": "<:Brimstone:978140719665512529>"
+        },
+        "Viper": {
+            "role": "Controller",
+            "icon": "<:Viper:978163495650619433>"
+        },
+        "Omen": {
+            "role": "Controller",
+            "icon": "<:Omen:978163495856111686>"
+        },
+        "Killjoy": {
+            "role": "Sentinel",
+            "icon": "<:Killjoy:978163495713509376>"
+        },
+        "Cypher": {
+            "role": "Sentinel",
+            "icon": "<:Cypher:978163495705145394>"
+        },
+        "Sova": {
+            "role": "Initiator",
+            "icon": "<:Sova:978163495969361960>"
+        },
+        "Sage": {
+            "role": "Sentinel",
+            "icon": "<:Sage:978163495747080192>"
+        },
+        "Phoenix": {
+            "role": "Duelist",
+            "icon": "<:Phoenix:978163495738691654>"
+        },
+        "Jett": {
+            "role": "Duelist",
+            "icon": "<:Jett:978163495583485982>"
+        },
+        "Reyna": {
+            "role": "Duelist",
+            "icon": "<:Reyna:978163495654789170>"
+        },
+        "Raze": {
+            "role": "Duelist",
+            "icon": "<:Raze:978163495453458462>"
+        },
+        "Breach": {
+            "role": "Initiator",
+            "icon": "<:Breach:978163495411531796>"
+        },
+        "Skye": {
+            "role": "Initiator",
+            "icon": "<:Skye:978163495705120819>"
+        },
+        "Yoru": {
+            "role": "Duelist",
+            "icon": "<:Yoru:978163495688372315>"
+        },
+        "Astra": {
+            "role": "Controller",
+            "icon": "<:Astra:978163495449292850>"
+        },
+        "KAY/O": {
+            "role": "Initiator",
+            "icon": "<:Kayo:978163495801597962>"
+        },
+        "Chamber": {
+            "role": "Sentinel",
+            "icon": "<:Chamber:978163495994552412>"
+        },
+        "Neon": {
+            "role": "Duelist",
+            "icon": "<:Neon:978163495382167592>"
+        },
+        "Fade": {
+            "role": "Initiator",
+            "icon": "<:Fade:978163495235366932>"
+        }
+    },
+    "Roles": {
+        "Controller": "<:Controller:978141283119951872>",
+        "Sentinel": "<:Sentinel:978142186392662036>",
+        "Duelist": "<:Duelist:978142061104607272>",
+        "Initiator": "<:Initiator:978142186556248075>"
     }
+
+
 }
