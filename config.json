@@ -1,3 +1,37 @@
 {
-    "prefix": "!"
+    "prefix": "!",
+    "mapicons" :{
+        "Breeze": "https://static.wikia.nocookie.net/valorant/images/1/10/Loading_Screen_Breeze.png",
+        "Fracture": "https://static.wikia.nocookie.net/valorant/images/f/fc/Loading_Screen_Fracture.png",
+        "Icebox": "https://static.wikia.nocookie.net/valorant/images/1/13/Loading_Screen_Icebox.png",
+        "Bind": "https://static.wikia.nocookie.net/valorant/images/2/23/Loading_Screen_Bind.png",
+        "Haven": "https://static.wikia.nocookie.net/valorant/images/7/70/Loading_Screen_Haven.png",
+        "Split": "https://static.wikia.nocookie.net/valorant/images/d/d6/Loading_Screen_Split.png",
+        "Ascent": "https://static.wikia.nocookie.net/valorant/images/e/e7/Loading_Screen_Ascent.png"
+    },
+    "rankicons": {
+        "Unranked": "<:unranked:978111294202843146>",
+        "Iron 1": "<:iron_1:978112181130379264>",
+        "Iron 2": "<:iron_2:978112181755322459>",
+        "Iron 3": "<:iron_3:978112181394612274>",
+        "Bronze 1": "<:bronze_1:978112181302333501>",
+        "Bronze 2": "<:bronze_2:978112181507858484>",
+        "Bronze 3": "<:bronze_3:978112181516251156>",
+        "Silver 1": "<:silver_1:978112181616918569>",
+        "Silver 2": "<:silver_2:978112181478494238>",
+        "Silver 3": "<:silver_3:978112181516271616>",
+        "Gold 1": "<:gold_1:978112181306552341>",
+        "Gold 2": "<:gold_2:978112181797269555>",
+        "Gold 3": "<:gold_3:978112181453324288>",
+        "Platinum 1": "<:plat_1:978112181398822944>",
+        "Platinum 2": "<:plat_2:978112181608525865>",
+        "Platinum 3": "<:plat_3:978112181826637855>",
+        "Diamond 1": "<:diamond_1:978112181520445552>",
+        "Diamond 2": "<:diamond_2:978112182027976714>",
+        "Diamond 3": "<:diamond_3:978112181591736390>",
+        "Immortal 1": "<:immoral_1:978112180689985599>",
+        "Immortal 2": "<:immortal_2:978112181516263454>",
+        "Immortal 3": "<:immortal_3:978112180908085248>",
+        "Radiant": "<:radiant:978108864446738472>"
+    }
 }
