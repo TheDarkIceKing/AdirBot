@@ -42,6 +42,7 @@ module.exports.run = async (bot, message, args) => {
        {name: "Rank", value:  botsettings.rankicons[RankData.currenttierpatched] || botsettings.rankicons.Unranked, inline: true},
        {name: "Progression", value: `${progressionRR.toString()}`, inline: true}
    )
+   .setFooter(`AccountID: ${AccountData["puuid"]}`)
    message.channel.send(await {embeds: [responseEmbed]})} catch{message.channel.send({content: "Internal error. Please try again"})}
 }
 
