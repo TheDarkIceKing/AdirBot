@@ -8,6 +8,7 @@ const bot = new Client({intents: 32767})
 
 
 const fs = require("fs");
+const matchsniper = require('./functions/matchsniper');
 bot.commands = new Discord.Collection();
 bot.aliases = new Discord.Collection();
 
@@ -15,6 +16,10 @@ bot.login(process.env.token);
 
 bot.once('ready', async () => {
     console.log(bot.user.username + " Is online!")
+    console.log("Loading valosniper...")
+    matchsniper.start(bot).then(() => {
+        console.log("Sniper started.")
+    })
 })
 
 

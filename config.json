@@ -1,5 +1,9 @@
 {
     "prefix": "!",
+    "discord":{
+        "serverid": "889940595638960178",
+        "sniperchannelid": "978350812482900058"
+    },
     "mapicons" :{
         "Breeze": "https://static.wikia.nocookie.net/valorant/images/1/10/Loading_Screen_Breeze.png",
         "Fracture": "https://static.wikia.nocookie.net/valorant/images/f/fc/Loading_Screen_Fracture.png",
