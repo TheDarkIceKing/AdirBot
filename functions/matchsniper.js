@@ -11,7 +11,12 @@ module.exports = {
                 matchHistoryURL = `https://api.henrikdev.xyz/valorant/v3/by-puuid/matches/eu/${selectedUser.puuid}`
                 matchResult = await fetch(matchHistoryURL);
                 matchJSON = await matchResult.json()
-                matchData = matchJSON.data[0] || matchJSON.data[1]
+                try{
+                    if(matchJSON.status != 200) return
+                    matchData = matchJSON.data[0] || matchJSON.data[1]
+                } catch{
+
+                }
                 
                 lastMatchId = matchData.metadata.matchid
                 if(selectedUser.lastKnownMatch != lastMatchId){
