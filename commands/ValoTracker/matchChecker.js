@@ -17,7 +17,7 @@ module.exports.run = async (bot, message, args) => {
             MatchData = matchJSON.data
             teamRed = MatchData.players.red
             teamBlue = MatchData.players.blue
-            if(MatchData.metadata.mode == "Deathmatch") return message.channel.send({content: "Deatchmatch is currently not supported"})
+            if(MatchData.metadata.mode == "Deathmatch" || MatchData.metadata.mode == "Spike Rush") return message.channel.send({content: "This mode is currently not supported"})
 
         } catch {
             return message.channel.send({ content: "Match not found" })
