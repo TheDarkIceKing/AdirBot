@@ -1,6 +1,7 @@
 const Discord = require("discord.js")
 const fetch = require('node-fetch');
 const botsettings = require('../../config.json');
+const valorankAPI = require('../../functions/valorankApi')
 
 
 module.exports.run = async (bot, message, args) => {
@@ -23,7 +24,8 @@ module.exports.run = async (bot, message, args) => {
         rankJSON = await valorankAPI.getRank(accountDetails[0], accountDetails[1])
         RankData = rankJSON.data
 
-    } catch {
+    } catch (err){
+        console.log(err)
         return message.channel.send({ content: "Internal error." })
     }
     try {
