@@ -13,6 +13,7 @@
     "dotenv": "^16.0.1",
     "logs": "^1.5.10",
     "pm2": "^5.2.0",
-    "sqlite3": "^5.0.8"
+    "sqlite3": "^5.0.8",
+    "unofficial-valorant-api": "^1.0.4"
   }
 }

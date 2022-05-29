@@ -11,6 +11,7 @@ module.exports.run = async (bot, message, args) => {
 
     message.channel.send({ content: "Getting data..." }).then(async (sentMessage) => {
         try {
+            keepalive(sentMessage)
             matchAPIURL = `https://api.henrikdev.xyz/valorant/v2/match/${matchId}`
             matchResult = await fetch(matchAPIURL)
             matchJSON = await matchResult.json()
@@ -23,7 +24,7 @@ module.exports.run = async (bot, message, args) => {
             return message.channel.send({ content: "Match not found" })
         }
 
-        keepalive(sentMessage)
+        
 
 
         responseEmbed = new Discord.MessageEmbed()
