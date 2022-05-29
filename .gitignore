@@ -1,2 +1,2 @@
 .env
-Data/userSniped.db
+*.db
