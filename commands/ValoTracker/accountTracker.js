@@ -2,6 +2,7 @@ const Discord = require("discord.js")
 const fetch = require('node-fetch');
 const botsettings = require('../../config.json');
 const valorankAPI = require('../../functions/valorankApi')
+const Canvas = require("canvas")
 
 
 module.exports.run = async (bot, message, args) => {
@@ -19,33 +20,116 @@ module.exports.run = async (bot, message, args) => {
         if (accountJSON.status == 404) {
             return message.channel.send({ content: "Player not found" })
         }
-        AccountData = accountJSON.data
+        if(accountJSON.status == 429){
+            return message.channel.send({content: "API ratelimit. Cannot lookup user"})
+        }
+        AccountData = accountJSON.data || null
+        console.log(AccountData)
 
-        rankJSON = await valorankAPI.getRank(accountDetails[0], accountDetails[1])
+        // console.log(await valorankAPI.getPeak(accountDetails[0], accountDetails[1]))
+        rankJSON = await valorankAPI.getRank(AccountData.region,accountDetails[0], accountDetails[1]) || null
         RankData = rankJSON.data
+        console.log(RankData)
 
-    } catch (err){
+    } catch (err) {
         console.log(err)
         return message.channel.send({ content: "Internal error." })
+
     }
     try {
 
         rankRR = RankData.elo
-        progressionRR = RankData.elo > 1800 ? `${rankRR - 1800} RR` : `${rankRR % 100} / 100 RR`
+        progressionRR = (RankData.elo > 1800 ? rankRR - 1800  : rankRR % 100 / 100) || 0
 
 
-        responseEmbed = new Discord.MessageEmbed()
-            .setTitle(`Account: ${accountDetails[0]}#${accountDetails[1]}`)
-            .setThumbnail(AccountData.card["small"])
-            .addFields(
-                { name: "Region", value: AccountData.region },
-                { name: "Level", value: AccountData.account_level.toString() },
-                { name: "Rank", value: botsettings.rankicons[RankData.currenttierpatched] || botsettings.rankicons.Unranked, inline: true },
-                { name: "Progression", value: `${progressionRR.toString()}`, inline: true }
-            )
-            .setFooter(`AccountID: ${AccountData["puuid"]}`)
-        message.channel.send(await { embeds: [responseEmbed] })
-    } catch { message.channel.send({ content: "Internal error. Please try again" }) }
+        const canvas = Canvas.createCanvas(1920, 1080)
+        const ctx = canvas.getContext("2d");
+        const background = await Canvas.loadImage(`./Content/agentunlock.png`)
+        ctx.drawImage(background, 0,0, canvas.width, canvas.height);
+        // console.log(`./Content/${RankData.currenttierpatched.toLowerCase()}.png`)
+        //
+        let rank = await(Canvas.loadImage(`./Content/unranked.png`))
+        let playercard = await(Canvas.loadImage( `https://media.valorant-api.com/playercards/9fb348bc-41a0-91ad-8a3e-818035c4e561/largeart.png`))
+
+        try{
+            rank = await(Canvas.loadImage(`./Content/${RankData.currenttierpatched.toLowerCase()}.png`))
+            playercard = await(Canvas.loadImage((AccountData.card["large"])))
+        } catch{ }
+        
+
+        //images
+        ctx.drawImage(playercard, 925 - playercard.width/2 ,0, playercard.width * 1.5, playercard.height * 1.5);
+        ctx.drawImage(rank, 1050 - rank.width/2 ,700, 100,100);
+
+        //RRBar
+        ctx.lineJoin = "round"
+        ctx.lineWidth = 10
+        // Empty
+        ctx.strokeStyle = "#5D6D90"
+        ctx.strokeRect(465,850, 1000, 10)
+        ctx.lineWidth = 8
+        //FULL
+        ctx.strokeStyle = "#11e6f5"
+        ctx.strokeRect(465,851, RankData.elo > 1800 ? 1000 : 1000*progressionRR, 8)
+
+        //Name
+        ctx.globalAlpha= 0.5
+        ctx.strokeStyle = "Black"
+        ctx.lineWidth = 50
+        ctx.strokeRect(990-playercard.width/2 ,600, playercard.width, 0)
+        ctx.globalAlpha = 1
+
+        //Name
+        ctx.fillStyle = "white"
+        ctx.textAlign = "center"
+        ctx.font = "bold 40px Sans"
+        ctx.fillText(accountDetails[0], 990, 610, playercard.width)
+
+
+        //RR
+        ctx.fillStyle = "white"
+        ctx.textAlign = "center"
+        ctx.font = "bold 25px Sans"
+
+        ranktext = RankData.elo > 1800 ? `${progressionRR}RR` : `${progressionRR * 100}/100RR`
+        ctx.fillText(ranktext, 1500, 800)
+
+        ctx.fillStyle = RankData["mmr_change_to_last_game"] > 0 ? "lime" : "red"
+        ctx.textAlign = "center"
+        ctx.font = "bold 25px Sans"
+        ctx.fillText(`${RankData["mmr_change_to_last_game"] || 0}`, 990, 950)
+
+        //UUID
+        ctx.fillStyle = "white"
+        ctx.textAlign = "center"
+        ctx.font = "bold 20px Sans"
+        ctx.fillText(AccountData["puuid"] || "Not found", 20, 1050)
+
+
+        
+
+        // const attachmentimage = new Discord.MessageAttachment(, 'rank.png')
+        message.channel.send({files: [canvas.toBuffer()]})
+        
+
+
+
+        // responseEmbed = new Discord.MessageEmbed()
+        //     .setTitle(`Account: ${accountDetails[0]}#${accountDetails[1]}`)
+        //     .setThumbnail(AccountData.card["small"])
+        //     .addFields(
+        //         { name: "Region", value: AccountData.region },
+        //         { name: "Level", value: AccountData.account_level.toString() },
+        //         { name: "Rank", value: botsettings.rankicons[RankData.currenttierpatched] || botsettings.rankicons.Unranked, inline: true },
+        //         { name: "Progression", value: `${progressionRR.toString()}`, inline: true }
+        //     )
+        //     .setFooter(`AccountID: ${AccountData["puuid"]}`)
+        // // message.channel.send(await { embeds: [responseEmbed] })
+        // message.channel.send({ files:[`./Content/${RankData.currenttierpatched.toLowerCase()}.png`]})
+
+    } catch (err) { 
+        console.log(err)
+        message.channel.send({ content: "Internal error. Please try again" }) }
 }
 
 module.exports.config = {
