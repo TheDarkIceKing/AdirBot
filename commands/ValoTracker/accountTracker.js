@@ -103,7 +103,7 @@ module.exports.run = async (bot, message, args) => {
         ctx.fillStyle = "white"
         ctx.textAlign = "center"
         ctx.font = "bold 20px Sans"
-        ctx.fillText(AccountData["puuid"] || "Not found", 20, 1050)
+        ctx.fillText(AccountData["puuid"] || "Not found", 200, 1050)
 
 
         
