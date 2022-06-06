@@ -44,15 +44,15 @@ module.exports.run = async (bot, message, args) => {
 
         const canvas = Canvas.createCanvas(1920, 1080)
         const ctx = canvas.getContext("2d");
-        const background = await Canvas.loadImage(`./Content/agentunlock.png`)
+        const background = await Canvas.loadImage(`./Content/ValorantAssets/agentunlock.png`)
         ctx.drawImage(background, 0,0, canvas.width, canvas.height);
         // console.log(`./Content/${RankData.currenttierpatched.toLowerCase()}.png`)
         //
-        let rank = await(Canvas.loadImage(`./Content/unranked.png`))
+        let rank = await(Canvas.loadImage(`./Content/Ranks/unranked.png`))
         let playercard = await(Canvas.loadImage( `https://media.valorant-api.com/playercards/9fb348bc-41a0-91ad-8a3e-818035c4e561/largeart.png`))
 
         try{
-            rank = await(Canvas.loadImage(`./Content/${RankData.currenttierpatched.toLowerCase()}.png`))
+            rank = await(Canvas.loadImage(`./Content/Ranks/${RankData.currenttierpatched.toLowerCase()}.png`))
             playercard = await(Canvas.loadImage((AccountData.card["large"])))
         } catch{ }
         
@@ -91,7 +91,7 @@ module.exports.run = async (bot, message, args) => {
         ctx.textAlign = "center"
         ctx.font = "bold 25px Sans"
 
-        ranktext = RankData.elo > 1800 ? `${progressionRR}RR` : `${progressionRR * 100}/100RR`
+        ranktext = RankData.elo > 1800 ? `${round(progressionRR)}RR` : `${round(progressionRR * 100)}/100RR`
         ctx.fillText(ranktext, 1500, 800)
 
         ctx.fillStyle = RankData["mmr_change_to_last_game"] > 0 ? "lime" : "red"
