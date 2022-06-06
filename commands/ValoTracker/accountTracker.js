@@ -91,7 +91,7 @@ module.exports.run = async (bot, message, args) => {
         ctx.textAlign = "center"
         ctx.font = "bold 25px Sans"
 
-        ranktext = RankData.elo > 1800 ? `${round(progressionRR)}RR` : `${round(progressionRR * 100)}/100RR`
+        ranktext = RankData.elo > 1800 ? `${Math.round(progressionRR)}RR` : `${Math.round(progressionRR * 100)}/100RR`
         ctx.fillText(ranktext, 1500, 800)
 
         ctx.fillStyle = RankData["mmr_change_to_last_game"] > 0 ? "lime" : "red"
