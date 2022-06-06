@@ -16,10 +16,10 @@ bot.login(process.env.token);
 
 bot.once('ready', async () => {
     console.log(bot.user.username + " Is online!")
-    console.log("Loading valosniper...")
-    matchsniper.start(bot).then(() => {
-        console.log("Sniper started.")
-    })
+    // console.log("Loading valosniper...")
+    // matchsniper.start(bot).then(() => {
+    //     console.log("Sniper started.")
+    // })
 })
 
 

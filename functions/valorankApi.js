@@ -1,3 +1,4 @@
+const { match } = require("assert");
 const ValorantAPI = require("unofficial-valorant-api")
 const botsettings = require('../config.json');
 
@@ -21,6 +22,10 @@ module.exports = {
             console.log(err)
             return "ERROR"
         }
+    },
+    getMatch: async function (matchid){
+        valomatch = await ValorantAPI.getMatch(matchid)
+        return valomatch
     }
 
 

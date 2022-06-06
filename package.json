@@ -17,6 +17,7 @@
     "gifencoder": "^2.0.1",
     "logs": "^1.5.10",
     "pm2": "^5.2.0",
+    "sort-nested-json": "^0.3.2",
     "sqlite3": "^5.0.8",
     "unofficial-valorant-api": "^1.0.4"
   }
