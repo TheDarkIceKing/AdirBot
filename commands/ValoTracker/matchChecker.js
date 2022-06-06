@@ -1,153 +1,128 @@
 const Discord = require("discord.js")
-const fetch = require('node-fetch');
-const botsettings = require('../../config.json');
+const valorankApi = require("../../functions/valorankApi")
+const sorter = require("sort-nested-json");
+const Canvas = require("canvas")
 
 
 module.exports.run = async (bot, message, args) => {
+    matchid = args[0]
+    valorankApi.getMatch(matchid)
+
+
     if (!args[0]) {
         return message.channel.send({ content: "Please enter the match id" })
     }
     matchId = args[0]
 
-    message.channel.send({ content: "Getting data..." }).then(async (sentMessage) => {
+    message.channel.send({ content: "Getting data." }).then(async (sentMessage) => {
+
         try {
-            keepalive(sentMessage)
-            matchAPIURL = `https://api.henrikdev.xyz/valorant/v2/match/${matchId}`
-            matchResult = await fetch(matchAPIURL)
-            matchJSON = await matchResult.json()
+
+            matchJSON = await valorankApi.getMatch(matchId)
+            if (matchJSON.status == 404) {
+                return message.channel.send({ content: "Match not found" })
+            }
+            if (matchJSON.status == 429) {
+                return message.channel.send({ content: "API ratelimit. Cannot lookup user" })
+            }
             MatchData = matchJSON.data
-            teamRed = MatchData.players.red
-            teamBlue = MatchData.players.blue
-            if(MatchData.metadata.mode == "Deathmatch" || MatchData.metadata.mode == "Spike Rush") return message.channel.send({content: "This mode is currently not supported"})
+            if (MatchData.metadata.mode == "Deathmatch") { return message.channel.send({ content: "This mode is currently not supported" }) }
+            teamRed = MatchData.players["all_players"].filter(function (i, n) {
+                return i.team === 'Red';
+            })
+            teamRed = sorter.sort(teamRed).desc("stats.kills")
+            teamBlue = MatchData.players["all_players"].filter(function (i, n) {
+                return i.team === 'Blue';
+            })
+            teamBlue = sorter.sort(teamBlue).desc("stats.kills")
 
-        } catch {
-            return message.channel.send({ content: "Match not found" })
+            const canvas = Canvas.createCanvas(769, 375)
+            const ctx = canvas.getContext("2d");
+            const scoreboardbackground = await Canvas.loadImage(`./Content/ValorantAssets/scoreboardplaceholder.png`)
+
+
+            const canvas2 = Canvas.createCanvas(769, 137)
+            const ctx2 = canvas2.getContext("2d");
+
+            roundswon = {
+                Red: 0,
+                Blue: 0
+            }
+
+            ctx.drawImage(scoreboardbackground, 0, 0, canvas.width, canvas.height);
+            // 70, 45 first item == 35 each
+            currentY = 50
+            ctx.fillStyle = "white"
+            ctx.font = "bold 10px Sans"
+
+            for (i = 0; i < teamBlue.length; i++) {
+                agent = teamBlue[i].character == "KAY/O" ? "Kayo" : teamBlue[i].character
+                agentimage = await Canvas.loadImage(`./Content/Agents/${agent}.png`)
+
+                ctx.drawImage(agentimage, 10, currentY - 21, 50, 34)
+                ctx.textAlign = "left"
+                ctx.fillText(`${teamBlue[i].name} #${teamBlue[i].tag}`, 90, currentY, 275)
+                ctx.textAlign = "center"
+                ctx.fillText(`${teamBlue[i].stats.kills} / ${teamBlue[i].stats.deaths} / ${teamBlue[i].stats.assists}`, 420, currentY, 100)
+                rank = await (await valorankApi.getRank(MatchData.metadata.region, teamBlue[i].name, teamBlue[i].tag)).data.currenttierpatched || "Unranked"
+                rankImage = await (Canvas.loadImage(`./Content/Ranks/${rank}.png`))
+                ctx.drawImage(rankImage, 650, currentY - 21, 40, 34)
+                ctx.fillText(`${teamBlue[i].level}`, 750, currentY, 100)
+                currentY += 34
+            }
+            currentY = 228
+            for (i = 0; i < teamRed.length; i++) {
+                agent = teamRed[i].character == "KAY/O" ? "Kayo" : teamRed[i].character
+                agentimage = await Canvas.loadImage(`./Content/Agents/${agent}.png`)
+
+                ctx.drawImage(agentimage, 10, currentY - 21, 50, 34)
+                ctx.textAlign = "left"
+                ctx.fillText(`${teamRed[i].name} #${teamRed[i].tag}`, 90, currentY, 275)
+                ctx.textAlign = "center"
+                ctx.fillText(`${teamRed[i].stats.kills} / ${teamRed[i].stats.deaths} / ${teamRed[i].stats.assists}`, 420, currentY, 100)
+                rank = await (await valorankApi.getRank(MatchData.metadata.region, teamRed[i].name, teamRed[i].tag)).data.currenttierpatched || "Unranked"
+                rankImage = await (Canvas.loadImage(`./Content/Ranks/${rank}.png`))
+                ctx.drawImage(rankImage, 650, currentY - 21, 40, 34)
+                ctx.fillText(`${teamRed[i].level}`, 750, currentY, 100)
+                currentY += 34
+            }
+            const scorebackground = await Canvas.loadImage(`./Content/ValorantAssets/matchScorePlaceholder.png`)
+            ctx2.drawImage(scorebackground, -196, 0, scorebackground.width, scorebackground.height)
+            const map = await Canvas.loadImage(`./Content/Maps/${MatchData.metadata.map}.png`)
+            for (i=0; i < MatchData.rounds.length; i++){
+                if(MatchData.rounds[i].end_type == "Surrendered") break;
+                roundswon[MatchData.rounds[i].winning_team] += 1
+            }
+            ctx2.drawImage(map, 310, 10, 150,80)
+            ctx2.fillStyle = "white"
+            ctx2.font = "30px Sans"
+            ctx2.fillText(`${await roundswon.Blue}`, 230, 55)
+            ctx2.fillText(`${await roundswon.Red}`, 520, 55)
+            ctx2.font = "20px Sans"
+            ctx2.fillText(`${MatchData.metadata.mode}`, 50, 55 )
+            ctx2.fillText(`${MatchData.metadata.cluster}`, 600, 55)
+
+            const finalcanvas = Canvas.createCanvas(canvas.width, canvas.height + canvas2.height)
+            const finalctx = finalcanvas.getContext("2d");
+            finalctx.drawImage(canvas2, 0,0, canvas2.width, canvas2.height)
+            finalctx.drawImage(canvas ,0, canvas2.height, canvas.width, canvas.height)
+            
+            message.channel.send({files: [finalcanvas.toBuffer()]}).then(() => {
+                sentMessage.delete()
+            })
+
+
+            // message.channel.send({ files: [canvas2.toBuffer()] }).then(() =>{
+            //     message.channel.send({ files: [canvas.toBuffer()] })
+            //     
+            // })
+
+
+        } catch (err) {
+            return console.log(err)
         }
-
-        
-
-
-        responseEmbed = new Discord.MessageEmbed()
-            .setTitle(`Match summary`)
-            .setThumbnail(botsettings.mapicons[MatchData.metadata["map"]])
-            .addFields(
-
-                { name: "MatchID", value: matchId },
-                { name: "Server", value: `${MatchData.metadata["cluster"]}`, inline: false },
-                { name: "\u200b", value: '\u200b' },
-                { name: "Mode", value: MatchData.metadata["mode"], inline: true }
-            )
-        loadMatchSummary(MatchData)
-
-        responseEmbed.addFields(
-            /// TEAM RED
-            { name: "\u200b", value: '\u200b' },
-            { name: "Red team", value: `${teamRed[0].name}#${teamRed[0].tag}\n${teamRed[1].name}#${teamRed[1].tag}\n${teamRed[2].name}#${teamRed[2].tag}\n${teamRed[3].name}#${teamRed[3].tag}\n${teamRed[4].name}#${teamRed[4].tag}\n`, inline: true },
-            { name: "Playing", value: `${await checkAgent(0, "red", MatchData)} \n${await checkAgent(1, "red", MatchData)} \n${await checkAgent(2, "red", MatchData)} \n${await checkAgent(3, "red", MatchData)} \n${await checkAgent(4, "red", MatchData)} \n`, inline: true },
-            { name: "Rank (level)", value: `${await checkRank(0, "red", MatchData)} (${teamRed[0].level}) \n${await checkRank(1, "red", MatchData)} (${teamRed[1].level}) \n${await checkRank(2, "red", MatchData)} (${teamRed[2].level}) \n${await checkRank(3, "red", MatchData)} (${teamRed[3].level}) \n${await checkRank(4, "red", MatchData)} (${teamRed[4].level}) \n`, inline: true },
-
-            // TEAM BLUE
-            { name: "\u200b", value: '\u200b' },
-            { name: "Blue team", value: `${teamBlue[0].name}#${teamBlue[0].tag} \n${teamBlue[1].name}#${teamBlue[1].tag} \n${teamBlue[2].name}#${teamBlue[2].tag} \n${teamBlue[3].name}#${teamBlue[3].tag} \n${teamBlue[4].name}#${teamBlue[4].tag} \n`, inline: true },
-            { name: "Playing", value: `${await checkAgent(0, "blue", MatchData)} \n${await checkAgent(1, "blue", MatchData)} \n${await checkAgent(2, "blue", MatchData)} \n${await checkAgent(3, "blue", MatchData)} \n${await checkAgent(4, "blue", MatchData)} \n`, inline: true },
-            { name: "Rank (level)", value: `${await checkRank(0, "blue", MatchData)} (${teamBlue[0].level})\n${await checkRank(1, "blue", MatchData)} (${teamBlue[1].level})\n${await checkRank(2, "blue", MatchData)} (${teamBlue[2].level}) \n${await checkRank(3, "blue", MatchData)} (${teamBlue[3].level}) \n${await checkRank(4, "blue", MatchData)} (${teamBlue[4].level}) \n`, inline: true },
-
-            //KDA
-            { name: "\u200b", value: '\u200b' },
-
-
-        )
-        await loadKDA(MatchData)
-
-        sentMessage.edit({ content: " ", embeds: [await responseEmbed] })
-
-
     })
-
-    async function checkRank(player, team, MatchDataResolved) {
-        try {
-            if (MatchDataResolved.players[team][player].currenttier_patched == "Unrated") {
-                rankAPIURL = `https://api.henrikdev.xyz/valorant/v1/by-puuid/mmr/${MatchDataResolved["metadata"]["region"]}/${MatchDataResolved.players[team][player]["puuid"]}`
-                rankResult = await fetch(rankAPIURL)
-                rankJSON = await rankResult.json()
-                RankData = await rankJSON.data
-                return botsettings.rankicons[await RankData.currenttierpatched] || botsettings.rankicons.Unranked
-            } else {
-                return botsettings.rankicons[MatchDataResolved.players[team][player].currenttier_patched]
-            }
-        } catch { return "ERROR" }
-    }
-
-    async function checkAgent(player, team, MatchDataResolved) {
-        equippedAgent = MatchDataResolved.players[team][player].character
-        playingRole = botsettings.agents[equippedAgent].role
-        roleIcon = botsettings.Roles[playingRole]
-        return `${botsettings.agents[equippedAgent].icon} ${roleIcon}`
-    }
-
-    async function loadKDA(MatchDataResolved) {
-        playerList = "***RED TEAM***\n"
-        playerKDA = "\u200b\n"
-
-        players = MatchDataResolved.players["red"]
-        players.forEach((selectedPlayer) => {
-            stats = selectedPlayer.stats
-            playerList += `${selectedPlayer.name}\n`
-            playerKDA += `${stats.kills}/${stats.deaths}/${stats.assists}\n`
-
-        })
-        playerList += "\u200b\n***BLUE TEAM***\n"
-        playerKDA += "\u200b\n\u200b\n"
-        players = MatchDataResolved.players["blue"]
-        players.forEach((selectedPlayer) => {
-            stats = selectedPlayer.stats
-            playerList += `${selectedPlayer.name}\n`
-            playerKDA += `${stats.kills}/${stats.deaths}/${stats.assists}\n`
-
-        })
-        responseEmbed.addFields(
-            { name: "Player", value: playerList, inline: true },
-            { name: "Performace", value: playerKDA, inline: true }
-        )
-    }
-    async function loadMatchSummary(MatchDataResolved) {
-
-        gameSummary = ""
-        //red team is first
-        gameScore = [0, 0]
-        rounds = MatchDataResolved.rounds
-        rounds.forEach((selectedRound) => {
-            if (selectedRound["winning_team"] == "Red") {
-                gameScore[0] += 1
-            }
-            if (selectedRound["winning_team"] == "Blue") {
-                gameScore[1] += 1
-            }
-        })
-        responseEmbed.addFields(
-            // { name: "\u200b", value: '\u200b' },
-            { name: "Score", value: `${gameScore[0]}-${gameScore[1]}`, inline: true }
-        )
-        return
-    }
-    async function keepalive(sentMessage) {
-        showNotFrozen = setInterval(function () {
-
-            if (sentMessage.content == "Getting data...") {
-                return sentMessage.edit({ content: "Getting data.." })
-            } else {
-                if (!sentMessage.content.includes("data")) {
-                    clearInterval(showNotFrozen);
-                    return sentMessage.edit({ content: " " })
-                }
-                else {
-                   return sentMessage.edit({ content: "Getting data..."})
-                }
-                
-            }
-
-        }, 800)
-    }
+    
 }
 
 module.exports.config = {
