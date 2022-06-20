@@ -20,16 +20,15 @@ module.exports.run = async (bot, message, args) => {
         if (accountJSON.status == 404) {
             return message.channel.send({ content: "Player not found" })
         }
-        if(accountJSON.status == 429){
-            return message.channel.send({content: "API ratelimit. Cannot lookup user"})
+        if (accountJSON.status == 429) {
+            return message.channel.send({ content: "API ratelimit. Cannot lookup user" })
         }
         AccountData = accountJSON.data || null
-        console.log(AccountData)
+        // console.log(AccountData)
 
         // console.log(await valorankAPI.getPeak(accountDetails[0], accountDetails[1]))
-        rankJSON = await valorankAPI.getRank(AccountData.region,accountDetails[0], accountDetails[1]) || null
+        rankJSON = await valorankAPI.getRank(AccountData.region, accountDetails[0], accountDetails[1]) || null
         RankData = rankJSON.data
-        console.log(RankData)
 
     } catch (err) {
         console.log(err)
@@ -39,44 +38,44 @@ module.exports.run = async (bot, message, args) => {
     try {
 
         rankRR = RankData.elo
-        progressionRR = (RankData.elo > 1800 ? rankRR - 1800  : rankRR % 100 / 100) || 0
+        progressionRR = (RankData.elo > 1800 ? rankRR - 1800 : rankRR % 100 / 100) || 0
 
 
         const canvas = Canvas.createCanvas(1920, 1080)
         const ctx = canvas.getContext("2d");
         const background = await Canvas.loadImage(`./Content/ValorantAssets/agentunlock.png`)
-        ctx.drawImage(background, 0,0, canvas.width, canvas.height);
-        // console.log(`./Content/${RankData.currenttierpatched.toLowerCase()}.png`)
-        //
-        let rank = await(Canvas.loadImage(`./Content/Ranks/unranked.png`))
-        let playercard = await(Canvas.loadImage( `https://media.valorant-api.com/playercards/9fb348bc-41a0-91ad-8a3e-818035c4e561/largeart.png`))
+        ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-        try{
-            rank = await(Canvas.loadImage(`./Content/Ranks/${RankData.currenttierpatched.toLowerCase()}.png`))
-            playercard = await(Canvas.loadImage((AccountData.card["large"])))
-        } catch{ }
-        
+
+        let rank = await (Canvas.loadImage(`./Content/Ranks/unranked.png`))
+        let playercard = await (Canvas.loadImage(`https://media.valorant-api.com/playercards/9fb348bc-41a0-91ad-8a3e-818035c4e561/largeart.png`))
+
+        try {
+            rank = await (Canvas.loadImage(`./Content/Ranks/${RankData.currenttierpatched.toLowerCase()}.png`))
+            playercard = await (Canvas.loadImage((AccountData.card["large"])))
+        } catch { }
+
 
         //images
-        ctx.drawImage(playercard, 925 - playercard.width/2 ,0, playercard.width * 1.5, playercard.height * 1.5);
-        ctx.drawImage(rank, 1050 - rank.width/2 ,700, 100,100);
+        ctx.drawImage(playercard, 790, 0, 405, 1000);
+        ctx.drawImage(rank, 1050 - rank.width / 2, 700, 100, 100);
 
         //RRBar
         ctx.lineJoin = "round"
         ctx.lineWidth = 10
         // Empty
         ctx.strokeStyle = "#5D6D90"
-        ctx.strokeRect(465,850, 1000, 10)
+        ctx.strokeRect(465, 850, 1000, 10)
         ctx.lineWidth = 8
         //FULL
         ctx.strokeStyle = "#11e6f5"
-        ctx.strokeRect(465,851, RankData.elo > 1800 ? 1000 : 1000*progressionRR, 8)
+        ctx.strokeRect(465, 851, RankData.elo > 1800 ? 1000 : 1000 * progressionRR, 8)
 
         //Name
-        ctx.globalAlpha= 0.5
+        ctx.globalAlpha = 0.5
         ctx.strokeStyle = "Black"
         ctx.lineWidth = 50
-        ctx.strokeRect(990-playercard.width/2 ,600, playercard.width, 0)
+        ctx.strokeRect(800, 600, 390, 0)
         ctx.globalAlpha = 1
 
         //Name
@@ -84,6 +83,20 @@ module.exports.run = async (bot, message, args) => {
         ctx.textAlign = "center"
         ctx.font = "bold 40px Sans"
         ctx.fillText(accountDetails[0], 990, 610, playercard.width)
+
+        //LevelBack
+        ctx.globalAlpha = 0.5
+        ctx.strokeStyle = "Black"
+        ctx.lineWidth = 50
+        ctx.strokeRect(940, 660, 100, 0)
+        ctx.globalAlpha = 1
+
+        //Level
+        ctx.fillStyle = "Cyan"
+        ctx.textAlign = "center"
+        ctx.font = "bold 35px Sans"
+        ctx.fillText(AccountData.account_level, 990, 670, playercard.width)
+
 
 
         //RR
@@ -106,11 +119,11 @@ module.exports.run = async (bot, message, args) => {
         ctx.fillText(AccountData["puuid"] || "Not found", 400, 1050)
 
 
-        
+
 
         // const attachmentimage = new Discord.MessageAttachment(, 'rank.png')
-        message.channel.send({files: [canvas.toBuffer()]})
-        
+        message.channel.send({ files: [canvas.toBuffer()] })
+
 
 
 
@@ -127,9 +140,10 @@ module.exports.run = async (bot, message, args) => {
         // // message.channel.send(await { embeds: [responseEmbed] })
         // message.channel.send({ files:[`./Content/${RankData.currenttierpatched.toLowerCase()}.png`]})
 
-    } catch (err) { 
+    } catch (err) {
         console.log(err)
-        message.channel.send({ content: "Internal error. Please try again" }) }
+        message.channel.send({ content: "Internal error. Please try again" })
+    }
 }
 
 module.exports.config = {
