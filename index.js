@@ -78,6 +78,7 @@ bot.on("messageCreate", async message => {
     if (!message.content.startsWith(prefix)) return;
     let commandfile = bot.commands.get(cmd.slice(prefix.length)) || bot.commands.get(bot.aliases.get(cmd.slice(prefix.length)))
     if (commandfile) {
+        message.channel.send({content: "We are slowly moving our commands to slash commands. Some commands may stop functioning"})
         message.delete()
         if (commandfile.config.permission == "DEVELOPER" && await checkdevs.check(message.author.id) == false) {
             message.channel.send({ content: "Only bot developers can access this command" })
