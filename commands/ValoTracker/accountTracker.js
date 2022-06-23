@@ -38,7 +38,7 @@ module.exports.run = async (bot, message, args) => {
     try {
 
         rankRR = RankData.elo
-        progressionRR = (RankData.elo > 1800 ? rankRR - 1800 : rankRR % 100 / 100) || 0
+        progressionRR = (RankData.elo > 2100 ? rankRR - 2100 : rankRR % 100 / 100) || 0
 
 
         const canvas = Canvas.createCanvas(1920, 1080)
@@ -69,7 +69,7 @@ module.exports.run = async (bot, message, args) => {
         ctx.lineWidth = 8
         //FULL
         ctx.strokeStyle = "#11e6f5"
-        ctx.strokeRect(465, 851, RankData.elo > 1800 ? 1000 : 1000 * progressionRR, 8)
+        ctx.strokeRect(465, 851, RankData.elo > 2100 ? 1000 : 1000 * progressionRR, 8)
 
         //Name
         ctx.globalAlpha = 0.5
