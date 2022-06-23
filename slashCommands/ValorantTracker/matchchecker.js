@@ -18,7 +18,7 @@ module.exports = {
         try {
 
             matchJSON = await valorankApi.getMatch(matchId)
-            if (matchJSON.status == null || 404) {
+            if (matchJSON.status == null || matchJSON.status == 404) {
                 return interaction.editReply({ content: "Match not found", ephemeral: true})
             }
             if (matchJSON.status == 429) {
