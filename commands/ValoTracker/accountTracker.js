@@ -6,7 +6,7 @@ const Canvas = require("canvas")
 
 
 module.exports.run = async (bot, message, args) => {
-    message.channel.send({content: "This command is no longer supported. Please use \"valorank\" instead"})
+    return message.channel.send({content: "This command is no longer supported, please use the slash commands"})
     if (!args[0]) {
         return message.channel.send({ content: "Please enter the name and tag" })
     }
