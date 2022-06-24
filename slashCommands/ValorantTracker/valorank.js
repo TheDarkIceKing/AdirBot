@@ -17,20 +17,20 @@ module.exports = {
         .addStringOption(option => option.setName('player').setDescription('The playername and tag you want to lookup ').setRequired(true)),
     async execute(bot, interaction) {
    
-      
+        interaction.deferReply({ content: "Getting data." }).then(async () => {
         accountDetails =  interaction.options.getString("player")
         accountDetails = accountDetails.split("#")
         if (!accountDetails[0] || !accountDetails[1]) {
-            return interaction.reply({ content: "Invalid player entry", ephemeral: true })
+            return interaction.editReply({ content: "Invalid player entry", ephemeral: true })
         }
         try {
     
             accountJSON = await valorankAPI.getPlayer(accountDetails[0], `${accountDetails[1]}`)
             if (accountJSON.status == 404) {
-                return interaction.reply({ content: "Player not found", ephemeral: true })
+                return interaction.editReply({ content: "Player not found", ephemeral: true })
             }
             if (accountJSON.status == 429) {
-                return interaction.reply({ content: "API ratelimit. Cannot lookup user", ephemeral: true})
+                return interaction.editReply({ content: "API ratelimit. Cannot lookup user", ephemeral: true})
             }
             AccountData = accountJSON.data || null
             // console.log(AccountData)
@@ -41,7 +41,7 @@ module.exports = {
     
         } catch (err) {
             console.log(err)
-            return interaction.reply({ content: "Internal error.",ephemeral: true })
+            return interaction.editReply({ content: "Internal error.",ephemeral: true })
     
         }
         try {
@@ -131,10 +131,10 @@ module.exports = {
     
     
             // const attachmentimage = new Discord.MessageAttachment(, 'rank.png')
-            return interaction.reply({ files: [canvas.toBuffer()] })
-        } catch {interaction.reply({content: "Interaction error",ephemeral: true})}
+            return interaction.editReply({ files: [canvas.toBuffer()] })
+        } catch {interaction.editReply({content: "Interaction error",ephemeral: true})}
     
-    }
+    })}
 }
 
 

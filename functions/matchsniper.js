@@ -35,7 +35,7 @@ module.exports = {
                     sendMessage.send({embeds: [newMatchEmbed]})
                 }
             })
-        },300000)
+        },30000)
     }
 
 }
