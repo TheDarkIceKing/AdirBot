@@ -23,23 +23,24 @@ bot.login(process.env.token);
 
 bot.once('ready', async () => {
     console.log(bot.user.username + " Is online!")
-    console.log("Loading valosniper...")
-    matchsniper.start(bot).then(() => {
-        console.log("Sniper started.")
-    })
+    bot.user.setActivity('Sniper temporary disabled as we work on a new version', {type: "PLAYING"})
+    // console.log("Loading valosniper...")
+    // matchsniper.startsniper(bot).then(() => {
+    //     console.log("Sniper started.")
+    // })
     const rest = new REST({ version: '9' }).setToken(process.env.token);
 
     (async () => {
         try {
             const clientId = '862190339141533707';
-            const guildId = '889940595638960178';
             console.log('Started refreshing application (/) commands.');
-
+            console.log(`Bot enviroment: ${process.env.enviroment}`)
+            masterGuildId = process.env.enviroment == "DEVELOPMENT" ?  '889940595638960178' : null
             await rest.put(
-                Routes.applicationGuildCommands(clientId, guildId),
+                Routes.applicationGuildCommands(clientId, masterGuildId),
                 { body: slashCommands },
             );
-
+-
             console.log('Successfully reloaded application (/) commands.');
         } catch (error) {
             console.error(error);
