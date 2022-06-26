@@ -36,10 +36,18 @@ bot.once('ready', async () => {
             console.log('Started refreshing application (/) commands.');
             console.log(`Bot enviroment: ${process.env.enviroment}`)
             masterGuildId = process.env.enviroment == "DEVELOPMENT" ?  '889940595638960178' : null
-            await rest.put(
-                Routes.applicationGuildCommands(clientId, masterGuildId),
-                { body: slashCommands },
-            );
+            if(masterGuildId){
+                await rest.put(
+                    Routes.applicationGuildCommands(clientId, masterGuildId),
+                    { body: slashCommands },
+                ); 
+            } else {
+                await rest.put(
+                    Routes.applicationCommands(clientId),
+                    { body: slashCommands },
+                ); 
+            }
+            
 -
             console.log('Successfully reloaded application (/) commands.');
         } catch (error) {
