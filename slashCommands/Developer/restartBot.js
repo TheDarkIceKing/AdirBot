@@ -21,7 +21,7 @@ module.exports = {
 module.exports.config = {
     name: "restart",
     description: "restarts the bot",
-    aliases: ["kill"],
-    usage: "restar",
+    aliases: [],
+    usage: "restart",
     permission: "DEVELOPER"
 }

@@ -48,7 +48,7 @@ module.exports = {
     
             rankRR = RankData.elo
             progressionRR = (RankData.elo > 2100 ? rankRR - 2100 : rankRR % 100 / 100) || 0
-    
+            
     
             const canvas = Canvas.createCanvas(1920, 1080)
             const ctx = canvas.getContext("2d");
@@ -113,7 +113,7 @@ module.exports = {
             ctx.textAlign = "center"
             ctx.font = "bold 25px Sans"
     
-            ranktext = RankData.elo > 1800 ? `${Math.round(progressionRR)}RR` : `${Math.round(progressionRR * 100)}/100RR`
+            ranktext = RankData.elo > 2100 ? `${Math.round(progressionRR)}RR` : `${Math.round(progressionRR * 100)}/100RR`
             ctx.fillText(ranktext, 1500, 800)
     
             ctx.fillStyle = RankData["mmr_change_to_last_game"] > 0 ? "lime" : "red"
